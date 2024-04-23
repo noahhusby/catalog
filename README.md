@@ -155,7 +155,7 @@ Response:
 
 ### Run the crawler
 
-This example will create a new crawler file for the topic of Formula SAE race cars. The source will come from two wikipedia pages. **Note:** This file has been pre-generated and is available at [data/crawler/formula.jsonl]().
+This example will create a new crawler file for the topic of Formula SAE race cars. The source will come from two wikipedia pages. **Note:** This file has been pre-generated and is available at [data/crawler/formula.jsonl](https://github.com/noahhusby/catalog/blob/main/data/crawler/formula.jsonl).
 
 ```shell
 python crawler.py -u https://en.wikipedia.org/wiki/Formula_Hybrid,https://en.wikipedia.org/wiki/Formula_SAE -o formula.jsonl 
@@ -171,9 +171,57 @@ python indexer.py -i data/crawler/formula.jsonl -o formula.json
 ### Run the processor
 This example will start the processor using the file built with the indexer.
 ```shell
-python indexer.py -i data/crawler/formula.jsonl -o formula.json     
+python processor.py -i data/indexer/formula.json        
 ```
 
-### Conclusion
+## Conclusion
 
+The system does work cohesively to create an inverse index and a web interface for querying the index. A few issues are apparent from testing that can be improved upon:
+1. Querying with two terms (bigrams) doesn't work as a pair. This isn't a bug but was not taken into consideration for the original design.
+2. The crawler was designed to primarily crawl wikipedia pages. As such, it wasn't tested as much against other types of pages. While it should work fine, results may be unexpected.
+3. There are a lot of improvements that can be made at the indexer side to build a stronger / more cohesive index. This goes along with issue #1 with optimizing for bigrams.
 
+The web interface works well and the REST API returns the proper data. In a future iteration, more metadata including scrape timestamp and page name should be included with the index for more detailed results.
+
+## Data Sources
+
+In the examples above, the wikipedia pages for [Formula SAE](https://en.wikipedia.org/wiki/Formula_SAE) and [Formula Hybrid](https://en.wikipedia.org/wiki/Formula_Hybrid) were used to build a index.
+
+The compiled data has been uploaded to the repo:
+- Crawler Compiled Result: [formula.jsonl](https://github.com/noahhusby/catalog/blob/main/data/crawler/formula.jsonl)
+- Indexer Compiled Result: [formula.json](https://github.com/noahhusby/catalog/blob/main/data/indexer/formula.json)
+
+## Test Cases
+
+Test cases were written for the crawler and indexer components using the `unittest` library from Python. The test cases are documented in the source code, but involve testing and mocking various aspects of the functions to ensure the proper data and calls are being made. To run test cases:
+1. Run `python -m unittest crawler.py`
+2. Run `python -m unittest indexer.py`
+
+## Source Code
+- [Crawler (crawler.py)](https://github.com/noahhusby/catalog/tree/main/crawler.py)
+- [Indexer (indexer.py)](https://github.com/noahhusby/catalog/tree/main/indexer.py)
+- [Processor (processor.py)](https://github.com/noahhusby/catalog/tree/main/processor.py)
+
+## Bibliography
+
+```
+“Argparse - Parser for Command-Line Options, Arguments and Sub-Commands.” Python documentation. Accessed April 23, 2024. https://docs.python.org/3/library/argparse.html. 
+
+C., James “Mocking a Method Outside of a Class.” Stack Overflow, December 1, 1960. https://stackoverflow.com/questions/29018025/mocking-a-method-outside-of-a-class. 
+
+“Check If a Key/Value Exists in a Dictionary in Python.” nkmk note. Accessed April 23, 2024. https://note.nkmk.me/en/python-dict-in-values-items/. 
+
+Dyouri, Abdelhadi. “How to Use Templates in a Flask Application.” DigitalOcean, September 13, 2021. https://www.digitalocean.com/community/tutorials/how-to-use-templates-in-a-flask-application. 
+
+Francois T. “How to Use Mock.ANY with Assert_called_with.” Stack Overflow, July 1, 1961. https://stackoverflow.com/questions/33214247/how-to-use-mock-any-with-assert-called-with. 
+
+MBTMBT “Loading JSONL File as JSON Objects.” Stack Overflow, February 1, 1964. https://stackoverflow.com/questions/50475635/loading-jsonl-file-as-json-objects. 
+
+Reza Mousavi “How to Remove Stop Words and Lemmatize at the Same Time When Using Spacy?” Stack Overflow, March 1, 1967. https://stackoverflow.com/questions/68010465/how-to-remove-stop-words-and-lemmatize-at-the-same-time-when-using-spacy. 
+
+Toleo “How to Prevent Duplicates on Scrapy Fetching Depending on an Existing JSON List.” Stack Overflow, April 1, 1964. https://stackoverflow.com/questions/51225781/how-to-prevent-duplicates-on-scrapy-fetching-depending-on-an-existing-json-list. 
+
+“Unittest - Unit Testing Framework.” Python documentation. Accessed April 23, 2024. https://docs.python.org/3/library/unittest.html. 
+
+“Unittest.Mock - Mock Object Library.” Python documentation. Accessed April 23, 2024. https://docs.python.org/3/library/unittest.mock.html. 
+```
