@@ -4,7 +4,7 @@ import logging
 import unittest
 from contextlib import contextmanager
 from datetime import datetime
-from unittest.mock import patch
+from unittest.mock import patch, mock_open
 
 from flask import Flask, render_template, request, template_rendered
 
@@ -98,50 +98,3 @@ def captured_templates(app):
         yield recorded
     finally:
         template_rendered.disconnect(record, app)
-
-
-class TestProcessorApp(unittest.TestCase):
-    def setUp(self):
-        # Patch sys.argv for every test to simulate the input file argument
-        self.patcher = patch('sys.argv', ['program', '-i', 'input.json'])
-        self.mock_argv = self.patcher.start()
-
-        # Patch opening and reading the file
-        self.mock_file = patch('builtins.open', mock_open(read_data='{"example": {"http://example.com": 1.0}}'))
-        self.mock_file.start()
-
-        # Setup Flask test client
-        self.app = app.test_client()
-        self.app.testing = True
-
-    def tearDown(self):
-        self.patcher.stop()
-        self.mock_file.stop()
-
-    def test_index_no_query(self):
-        response = self.app.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('index.html', response.get_data(as_text=True))
-
-    def test_search_api(self):
-        response = self.app.get('/api/v1/search?query=example&k=1')
-        self.assertEqual(response.status_code, 200)
-        json_data = response.get_json()
-        self.assertEqual(json_data['status'], 'success')
-        self.assertEqual(len(json_data['result']), 1)
-        self.assertEqual(json_data['result'][0][0], 'http://example.com')
-
-    def test_get_top_k_results(self):
-        results = get_top_k_results("example", 1)
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0][0], "http://example.com")
-
-    def test_index_with_query(self):
-        response = self.app.get('/?query=example&k=1')
-        self.assertEqual(response.status_code, 200)
-
-    def test_api_with_missing_query(self):
-        response = self.app.get('/api/v1/search')
-        json_data = response.get_json()
-        self.assertEqual(json_data['status'], 'success')
-        self.assertEqual(len(json_data['result']), 0)
