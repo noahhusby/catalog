@@ -37,15 +37,13 @@ f.close()
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # A simple HTML form for search queries
-
-
-@app.route('/search', methods=['GET'])
-def search():
+    if 'query' not in request.args.keys():
+        return render_template('index.html')
     query = request.args.get('query', '')
-    k = int(request.args.get('k', 10))  # How many results to return
+    k = int(request.args.get('k', 10))
     results = get_top_k_results(query, k)
-    return render_template('results.html', query=query, results=results)  # Display results
+    request.args.keys()
+    return render_template('index.html', query=query, results=results)  # Display results
 
 
 @app.route('/api/v1/search', methods=['GET'])

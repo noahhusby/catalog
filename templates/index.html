@@ -7,12 +7,22 @@
 <body class="is-paper" style="margin: 1em">
 
     <p class="p-heading--1">Catalog - Search Engine</p>
+    <p class="p-heading--6">Noah Husby | CS 429</p>
     <hr>
-    <form action="/search" method="get" class="p-search-box">
+    <form action="/" method="get" class="p-search-box">
         <label class="u-off-screen" for="search">Search</label>
         <input type="search" id="search" class="p-search-box__input" name="query" placeholder="Search" required="" autocomplete="on">
         <button type="reset" class="p-search-box__reset"><i class="p-icon--close">Close</i></button>
         <button type="submit" class="p-search-box__button"><i class="p-icon--search">Search</i></button>
     </form>
+    {% if query %}
+        <hr>
+        <p class="p-heading--2">Results for '{{ query }}'</p>
+        <ol class="p-list--divided">
+            {% for url, score in results %}
+                <li class="p-list__item"><a href="{{ url }}">{{ url }}</a> - Score: {{ score }}</li>
+            {% endfor %}
+        </ol>
+    {% endif %}
 </body>
 </html>
