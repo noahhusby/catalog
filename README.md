@@ -60,4 +60,5 @@ The following guidelines were created for the project:
 
 ### Architecture
 
+![Architecture Overview](https://raw.githubusercontent.com/noahhusby/catalog/main/docs/catalog_infra.png)
 
