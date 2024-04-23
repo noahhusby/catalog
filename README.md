@@ -58,7 +58,57 @@ The following guidelines were created for the project:
 2. A REST API must be exposed for returning the direct search results.
 3. The processor must have an argument for defining the target index file.
 
-### Architecture
+## Architecture
+
+### Overview
 
 ![Architecture Overview](https://raw.githubusercontent.com/noahhusby/catalog/main/docs/catalog_infra.png)
+
+The architecture is composed of three major components:
+1. Crawler
+   2. Based on `scrapy` library
+   3. Implements `spacy` to remove stop words from compiled results
+3. Indexer
+   4. Based on `scikit-learn` library
+5. Processor
+   6. Based on `flask` library
+   7. Implements user interface & REST API
+
+### Web Interface
+
+The web interface is exposed on the root (`/`) of the web server. By default, the port of the processor is 8080. It has been adjusted from the default due to conflicts with a service on newer releases of MacOS.
+
+### REST API
+
+
+## Operation
+
+### Setting up the dev environment
+
+1. Run `pip install -r requirements.txt` to install the required packages.
+2. Run `python -m spacy download en_core_web_sm` to manually install the stop word package.
+
+⚠️ **Note:** It may be necessary to replace `pip` and `python` with `pip3` and `python3` in certain installations.
+
+### Run the crawler
+
+This example will create a new crawler file for the topic of Formula SAE race cars. The source will come from two wikipedia pages. **Note:** This file has been pre-generated and is available at [data/crawler/formula.jsonl]().
+
+```shell
+python crawler.py -u https://en.wikipedia.org/wiki/Formula_Hybrid,https://en.wikipedia.org/wiki/Formula_SAE -o formula.jsonl 
+```
+
+### Run the indexer
+This example will run the indexer using the file generated from the crawler example above. 
+
+```shell
+python indexer.py -i data/crawler/formula.jsonl -o formula.json
+```
+
+### Run the processor
+This example will start the processor using the file built with the indexer.
+```shell
+python indexer.py -i data/crawler/formula.jsonl -o formula.json     
+```
+
 

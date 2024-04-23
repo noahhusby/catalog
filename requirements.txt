@@ -1,0 +1,5 @@
+Scrapy~=2.11.1
+spacy~=3.7.4
+scikit-learn~=1.4.2
+flask~=3.0.3
+alive-progress
