@@ -1,11 +1,15 @@
 import logging
+import sys
+import unittest
 import warnings
+from unittest.mock import MagicMock, patch
 from urllib.parse import urlparse
 
 import scrapy
 import spacy
 import argparse
 
+from scrapy import crawler
 from scrapy.crawler import CrawlerProcess
 
 
@@ -124,3 +128,61 @@ class WikiSpider(scrapy.Spider):
 
 if __name__ == '__main__':
     start()
+
+
+class TestCrawlerUtility(unittest.TestCase):
+    def test_required_url_argument(self):
+        """
+        Checks to ensure the program exits when no valid URL is attached
+        """
+        with self.assertRaises(SystemExit):
+            sys.argv = ['program', '-d', '2', '-p', '50', '-o', 'test.jsonl']
+            start()
+
+    @patch('crawler.crawl')
+    def test_default_values(self, mock_crawl):
+        """
+        Checks to make sure crawl was called with the proper arguments
+        """
+        sys.argv = ['program', '-u', 'https://example.com']
+        start()
+        # Assuming crawl() is mocked, verify the call with default arguments
+        mock_crawl.assert_called_with('https://example.com', 1, 100, 'output.jsonl')
+
+    @patch('crawler.crawl')
+    def test_all_arguments(self, mock_crawl):
+        sys.argv = ['program', '-u', 'https://example.com', '-d', '2', '-p', '50', '-o', 'test.jsonl']
+        start()
+        # Again, assuming crawl() is mocked
+        mock_crawl.assert_called_with('https://example.com', 2, 50, 'test.jsonl')
+
+
+class TestCrawlFunction(unittest.TestCase):
+    @unittest.mock.patch('crawler.CrawlerProcess')
+    def test_crawler_initialization(self, mock_process):
+        crawl('https://example.com', 1, 100, 'output.jsonl')
+        spacy.load = MagicMock()
+        # Make sure all the scrapy process methods were called
+        mock_process.assert_called_once()
+        process_instance = mock_process.return_value
+        process_instance.crawl.assert_called_once()
+        process_instance.start.assert_called_once()
+
+
+class TestWikiSpider(unittest.TestCase):
+    def setUp(self):
+        self.spider = WikiSpider(start_uri=['https://example.com'])
+
+    @unittest.mock.patch('scrapy.spiders.Spider.start_requests')
+    def test_initial_urls(self, mock_start):
+        self.assertEqual(self.spider.start_urls, ['https://example.com'])
+        self.assertIn('example.com', self.spider.allowed_domains)
+
+    def test_parse_function(self):
+        # Mock the response object to provide necessary data for parsing
+        response = MagicMock()
+        response.url = 'https://example.com'
+        response.xpath.return_value.getall.return_value = ['Example content']
+        # Assuming spacy NLP is mocked too
+        result = next(self.spider.parse(response))
+        self.assertIn('https://example.com', result)
