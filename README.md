@@ -14,11 +14,12 @@
 </div>
 
 ## Table of Contents
-- [Abstract](https://github.com/noahhusby/catalog/tree/main#abstract)
+- [Abstract](https://github.com/noahhusby/catalog#abstract)
 - [Project Overview](https://github.com/noahhusby/catalog/tree/main/#overview)
   - [Component Workflow](https://github.com/noahhusby/catalog/tree/main/#component-workflow)
 - [Design](https://github.com/noahhusby/rent/blob/main/#design)
-  - [Crawling & Indexing](https://github.com/noahhusby/catalog/tree/main/#crawling-indexing)
+  - [Crawling & Indexing](https://github.com/noahhusby/catalog/tree/main/#crawling--indexing)
+  - [Processing](https://github.com/noahhusby/catalog/tree/main/#processing)
 - [Relational Schema](https://github.com/noahhusby/rent/blob/main/relational_schema.pdf)
 - [Sample Data](https://github.com/noahhusby/rent/tree/main#sql-scripts)
   - [As SQL File](https://github.com/noahhusby/rent/blob/main/sample_data.sql)
@@ -51,3 +52,12 @@ The following guidelines were created for the project:
 2. The crawler must be able to have the depth and max pages variables assigned from the CLI.
 3. All files between components must use a common format (json, xml) in place of a more efficient binary format. This is for readability / expandability of the system.
 4. The indexer should display the current status of building large indexes. (logs, progress bar, etc.)
+
+### Processing
+1. A web interface must be exposed for the end user to interact with the search engine.
+2. A REST API must be exposed for returning the direct search results.
+3. The processor must have an argument for defining the target index file.
+
+### Architecture
+
+
