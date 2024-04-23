@@ -20,13 +20,19 @@
 - [Design](https://github.com/noahhusby/rent/blob/main/#design)
   - [Crawling & Indexing](https://github.com/noahhusby/catalog/tree/main/#crawling--indexing)
   - [Processing](https://github.com/noahhusby/catalog/tree/main/#processing)
-- [Relational Schema](https://github.com/noahhusby/rent/blob/main/relational_schema.pdf)
-- [Sample Data](https://github.com/noahhusby/rent/tree/main#sql-scripts)
-  - [As SQL File](https://github.com/noahhusby/rent/blob/main/sample_data.sql)
-- Application
-  - [Backend (/src)](https://github.com/noahhusby/rent/tree/main/src)
-  - [Frontend (/web)](https://github.com/noahhusby/rent/tree/main/web)
-- [Video Walkthrough](https://youtu.be/dTSDwB6lwqI)
+- [Architecture](https://github.com/noahhusby/catalog/tree/main/#architecture)
+  - [Overview](https://github.com/noahhusby/catalog/tree/main/#overview-1)
+  - [Web Interface](https://github.com/noahhusby/catalog/tree/main/#web-interface)
+  - [REST API](https://github.com/noahhusby/catalog/tree/main/#rest-api)
+- [Operation](https://github.com/noahhusby/catalog/tree/main/#operation)
+- [Conclusion](https://github.com/noahhusby/catalog/tree/main/#conclusion)
+- [Data Sources](https://github.com/noahhusby/catalog/tree/main/#data-sources)
+- [Test Cases](https://github.com/noahhusby/catalog/tree/main/#test-cases)
+- [Source Code](https://github.com/noahhusby/catalog/tree/main/#source-code)
+  - [Crawler (crawler.py)](https://github.com/noahhusby/catalog/tree/main/crawler.py)
+  - [Indexer (indexer.py)](https://github.com/noahhusby/catalog/tree/main/indexer.py)
+  - [Processor (processor.py)](https://github.com/noahhusby/catalog/tree/main/processor.py)
+- [Bibliography](https://github.com/noahhusby/catalog/tree/main/#bibliography)
 
 ## Abstract
 
@@ -80,6 +86,61 @@ The web interface is exposed on the root (`/`) of the web server. By default, th
 
 ### REST API
 
+A REST API is exposed at `/api/v1/search` to get the raw search results. In order to use the API, a query parameter must be appended to specify the search term. 
+
+Example: `GET http://127.0.0.1:8080/api/v1/search?query=test`
+
+Response:
+```json
+{
+  "path": "/api/v1/search",
+  "result": [
+    [
+      "https://en.wikipedia.org/wiki/Wind_tunnel",
+      0.09704187380027539
+    ],
+    [
+      "https://en.wikipedia.org/wiki/Postgraduate_education",
+      0.030624801076030946
+    ],
+    [
+      "https://en.wikipedia.org/wiki/Baja_SAE",
+      0.027980221968710767
+    ],
+    [
+      "https://en.wikipedia.org/wiki/Mini_Baja",
+      0.027884019899316846
+    ],
+    [
+      "https://en.wikipedia.org/wiki/SAE_J300",
+      0.025263906320942754
+    ],
+    [
+      "https://en.wikipedia.org/wiki/SAE_304_stainless_steel",
+      0.024212789038846882
+    ],
+    [
+      "https://en.wikipedia.org/wiki/SAE_J306",
+      0.022958469350262595
+    ],
+    [
+      "https://en.wikipedia.org/wiki/SAE_J2452",
+      0.018041012695770336
+    ],
+    [
+      "https://en.wikipedia.org/wiki/Limited_liability_company",
+      0.017562143073061882
+    ],
+    [
+      "https://en.wikipedia.org/wiki/Sardar_Vallabhbhai_National_Institute_of_Technology",
+      0.016896694891923778
+    ]
+  ],
+  "status": "success",
+  "statusCode": "200",
+  "timestamp": "Tue, 23 Apr 2024 00:07:14 GMT"
+}
+```
 
 ## Operation
 
@@ -110,5 +171,7 @@ This example will start the processor using the file built with the indexer.
 ```shell
 python indexer.py -i data/crawler/formula.jsonl -o formula.json     
 ```
+
+### Conclusion
 
 
