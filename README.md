@@ -84,6 +84,8 @@ The architecture is composed of three major components:
 
 The web interface is exposed on the root (`/`) of the web server. By default, the port of the processor is 8080. It has been adjusted from the default due to conflicts with a service on newer releases of MacOS.
 
+![Web Interface](https://raw.githubusercontent.com/noahhusby/catalog/main/docs/interface_demo.gif)
+
 ### REST API
 
 A REST API is exposed at `/api/v1/search` to get the raw search results. In order to use the API, a query parameter must be appended to specify the search term. 
